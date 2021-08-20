@@ -1,0 +1,27 @@
+{
+  "name": "phpcpd",
+  "type": "php-file",
+  "url": "src/phpcpd.php",
+  "api-version": "1.0.0",
+  "requirements": {
+    "php": {
+      "php": "^7.3 || ^8.0",
+      "ext-dom": "*"
+    },
+    "tool": {
+      "phpcpd": {
+        "constraints": "^3.0 || ^4.0 || ^5.0",
+        "sources": [
+          {
+            "type": "github",
+            "repository": "sebastianbergmann/phpcpd"
+          },
+          {
+            "type": "phar.io",
+            "url": "https://phar.phpunit.de/phive.xml"
+          }
+        ]
+      }
+    }
+  }
+}
