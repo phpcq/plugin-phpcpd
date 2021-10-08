@@ -35,17 +35,12 @@ return new class implements DiagnosticsPluginInterface {
     {
         $configOptionsBuilder->supportDirectories();
         $configOptionsBuilder
-            ->describeStringListOption('names', 'A list of file names to check.')
+            ->describeStringListOption('suffix', 'A list of file name suffixes to include.')
             ->isRequired()
-            ->withDefaultValue(['*.php']);
+            ->withDefaultValue(['.php']);
 
         $configOptionsBuilder
-            ->describeStringListOption('names_exclude', 'A list of file names to exclude.');
-
-        $configOptionsBuilder->describeStringListOption(
-            'regexps_exclude',
-            'A list of paths regexps to exclude (example: "#var/.*_tmp#")'
-        );
+            ->describeStringListOption('exclude', 'A list of path names to exclude.');
 
         $configOptionsBuilder
             ->describeIntOption('min_lines', 'Minimum number of identical lines.')
@@ -97,18 +92,22 @@ return new class implements DiagnosticsPluginInterface {
             $logFile = $environment->getUniqueTempFile($this, 'pmd-cpd.xml')
         ];
 
-        if ($config->has('names')) {
-            $args[] = '--names=' . implode(',', $config->getStringList('names'));
+        if ($config->has('suffix')) {
+            foreach ($config->getStringList('suffix') as $suffix) {
+                $args[] = '--suffix';
+                $args[] = $suffix;
+            }
         }
-        if ($config->has('names_exclude')) {
-            $args[] = '--names-exclude=' . implode(',', $config->getStringList('names_exclude'));
+        if ($config->has('exclude')) {
+            foreach ($config->getStringList('exclude') as $exclude) {
+                $args[] = '--exclude ' . $exclude;
+            }
         }
-        if ($config->has('regexps_exclude')) {
-            $args[] = '--regexps-exclude';
-            $args[] = implode(',', $config->getStringList('regexps_exclude'));
-        }
-        $args[] = '--min-lines=' . (string) $config->getInt('min_lines');
-        $args[] = '--min-tokens=' . (string) $config->getInt('min_tokens');
+
+        $args[] = '--min-lines';
+        $args[] = (string) $config->getInt('min_lines');
+        $args[] = '--min-tokens';
+        $args[] = (string) $config->getInt('min_tokens');
 
         if ($config->getBool('fuzzy')) {
             $args[] = '--fuzzy';
