@@ -1,9 +1,10 @@
 name: Code Quality Diagnostics
 
-env:
-  PHPCQ_DIRECTORY: ./phpcq-runner
-
-on: [pull_request, push]
+on:
+  pull_request:
+  push:
+    branches:
+      - master
 
 jobs:
   build:
@@ -55,3 +56,10 @@ jobs:
 
       - name: Run tests
         run: ./vendor/bin/phpcq run -o github-action -o default
+
+      - name: Upload build directory to artifact
+        uses: actions/upload-artifact@v2
+        if: ${{ success() }} || ${{ failure() }}
+        with:
+          name: phpcq-builds
+          path: .phpcq/build/
