@@ -100,7 +100,8 @@ return new class implements DiagnosticsPluginInterface {
         }
         if ($config->has('exclude')) {
             foreach ($config->getStringList('exclude') as $exclude) {
-                $args[] = '--exclude ' . $exclude;
+                $args[] = '--exclude';
+                $args[] = $exclude;
             }
         }
 
